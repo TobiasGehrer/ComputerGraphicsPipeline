@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+group 'at.fhv.sysarch.lab3'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = "17.0.15"
+    modules = ['javafx.controls']
+}
+
+application {
+    mainClassName = 'at.fhv.sysarch.lab3.Main'
+}
