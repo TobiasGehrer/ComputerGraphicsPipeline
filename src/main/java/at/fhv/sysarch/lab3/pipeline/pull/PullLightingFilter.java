@@ -4,7 +4,6 @@ import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.data.ColoredFace;
 import at.fhv.sysarch.lab3.pipeline.data.LitFace;
 import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPullFilter;
-import com.hackoeur.jglm.Vec;
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
 

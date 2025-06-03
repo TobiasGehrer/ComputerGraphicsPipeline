@@ -15,29 +15,29 @@ public class PullPipelineFactory {
         PullBackfaceCullingFilter backfaceCuller = new PullBackfaceCullingFilter();
         PullColoringFilter coloring = new PullColoringFilter(pd.getModelColor());
 
-        PullLightingFilter lighting = null;
-        if (pd.isPerformLighting()) {
-            lighting = new PullLightingFilter(pd.getLightPos());
-        }
-
-        PullProjectionFilter projection = new PullProjectionFilter(pd.getProjTransform());
-        PullScreenTransformFilter screenTransform = new PullScreenTransformFilter(pd.getViewportTransform());
         PullRenderingSink renderer = new PullRenderingSink(pd.getGraphicsContext(), pd.getRenderingMode());
 
         mvTransform.setSource(modelSource);
         backfaceCuller.setSource(mvTransform);
+        coloring.setSource(backfaceCuller);
 
         if (pd.isPerformLighting()) {
-            coloring.setSource(backfaceCuller);
+            PullLightingFilter lighting = new PullLightingFilter(pd.getLightPos());
+            PullProjectionFilterForLit projection = new PullProjectionFilterForLit(pd.getProjTransform());
+            PullScreenSpaceTransformFilterForLit screenTransform = new PullScreenSpaceTransformFilterForLit(pd.getViewportTransform());
+
             lighting.setSource(coloring);
             projection.setSource(lighting);
+            screenTransform.setSource(projection);
+            renderer.setSource(screenTransform);
         } else {
-            coloring.setSource(backfaceCuller);
-            projection.setSource(coloring);
-        }
+            PullProjectionFilterForColored projection = new PullProjectionFilterForColored(pd.getProjTransform());
+            PullScreenSpaceTransformFilterForColored screenTransform = new PullScreenSpaceTransformFilterForColored(pd.getViewportTransform());
 
-        screenTransform.setSource(projection);
-        renderer.setSource(screenTransform);
+            projection.setSource(coloring);
+            screenTransform.setSource(projection);
+            renderer.setSource(screenTransform);
+        }
 
         return new AnimationRenderer(pd) {
             private float rotation = 0.0f;
