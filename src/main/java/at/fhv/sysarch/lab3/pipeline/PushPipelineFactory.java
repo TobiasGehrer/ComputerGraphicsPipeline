@@ -14,6 +14,7 @@ public class PushPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
         ModelViewTransformFilter mvTransform = new ModelViewTransformFilter();
         BackfaceCullingFilter backfaceCuller = new BackfaceCullingFilter();
+        DepthSortingFilter depthSorter = new DepthSortingFilter();
         ColoringFilter coloring = new ColoringFilter(pd.getModelColor());
 
         LightingFilter lighting = null;
@@ -26,7 +27,8 @@ public class PushPipelineFactory {
         RenderingSink renderer = new RenderingSink(pd.getGraphicsContext(), pd.getRenderingMode());
 
         mvTransform.setTarget(backfaceCuller);
-        backfaceCuller.setTarget(coloring);
+        backfaceCuller.setTarget(depthSorter);
+        depthSorter.setTarget(coloring);
 
         if (pd.isPerformLighting()) {
             coloring.setTarget(lighting);
@@ -59,10 +61,14 @@ public class PushPipelineFactory {
 
                 mvTransform.setModelViewMatrix(modelViewMatrix);
 
+                depthSorter.startNewFrame();
+
                 List<Face> faces = model.getFaces();
                 for (Face face : faces) {
                     mvTransform.push(face);
                 }
+
+                depthSorter.processSortedFaces();
             }
         };
     }

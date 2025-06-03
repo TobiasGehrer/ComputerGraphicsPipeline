@@ -7,7 +7,7 @@ import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPushFilter;
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec4;
 
-public class ProjectionFilter extends AbstractPushFilter<Object, Face> {
+public class ProjectionFilter extends AbstractPushFilter<Object, Object> {
     private final Mat4 projectionMatrix;
 
     public ProjectionFilter(Mat4 projectionMatrix) {
@@ -15,21 +15,37 @@ public class ProjectionFilter extends AbstractPushFilter<Object, Face> {
     }
 
     @Override
-    protected Face process(Object input) {
+    protected Object process(Object input) {
         Face face;
 
         if (input instanceof LitFace) {
-            face = ((LitFace) input).getFace();
+            LitFace litFace = (LitFace) input;
+            face = litFace.getFace();
+
+            Vec4 v1 = projectionMatrix.multiply(face.getV1());
+            Vec4 v2 = projectionMatrix.multiply(face.getV2());
+            Vec4 v3 = projectionMatrix.multiply(face.getV3());
+
+            Face projectedFace = new Face(v1, v2, v3, face);
+            return new LitFace(projectedFace, litFace.getColor(), litFace.getLightingFactor());
         } else if (input instanceof ColoredFace) {
-            face = ((ColoredFace) input).getFace();
+            ColoredFace coloredFace = (ColoredFace) input;
+            face = coloredFace.getFace();
+
+            Vec4 v1 = projectionMatrix.multiply(face.getV1());
+            Vec4 v2 = projectionMatrix.multiply(face.getV2());
+            Vec4 v3 = projectionMatrix.multiply(face.getV3());
+
+            Face projectedFace = new Face(v1, v2, v3, face);
+            return new ColoredFace(projectedFace, coloredFace.getColor());
         } else {
             face = (Face) input;
+
+            Vec4 v1 = projectionMatrix.multiply(face.getV1());
+            Vec4 v2 = projectionMatrix.multiply(face.getV2());
+            Vec4 v3 = projectionMatrix.multiply(face.getV3());
+
+            return new Face(v1, v2, v3, face);
         }
-
-        Vec4 v1 = projectionMatrix.multiply(face.getV1());
-        Vec4 v2 = projectionMatrix.multiply(face.getV2());
-        Vec4 v3 = projectionMatrix.multiply(face.getV3());
-
-        return new Face(v1, v2, v3, face);
     }
 }

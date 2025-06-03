@@ -19,12 +19,12 @@ public class ScreenSpaceTransformFilter extends AbstractPushFilter<Object, Scree
     @Override
     protected ScreenFace process(Object input) {
         Face face;
-        Color color; // = Color.WHITE;
+        Color color;
 
         if (input instanceof LitFace) {
             LitFace litFace = (LitFace) input;
             face = litFace.getFace();
-            color = litFace.getColor();
+            color = litFace.getFinalColor();
         } else if (input instanceof ColoredFace) {
             ColoredFace coloredFace = (ColoredFace) input;
             face = coloredFace.getFace();
