@@ -2,37 +2,45 @@ package at.fhv.sysarch.lab3.pipeline;
 
 import at.fhv.sysarch.lab3.animation.AnimationRenderer;
 import at.fhv.sysarch.lab3.obj.Model;
+import at.fhv.sysarch.lab3.pipeline.pull.*;
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Matrices;
 import javafx.animation.AnimationTimer;
 
 public class PullPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
-        // TODO: pull from the source (model)
+        ModelSource modelSource = new ModelSource(pd.getModel());
 
-        // TODO 1. perform model-view transformation from model to VIEW SPACE coordinates
+        PullModelViewTransformFilter mvTransform = new PullModelViewTransformFilter();
+        PullBackfaceCullingFilter backfaceCuller = new PullBackfaceCullingFilter();
+        PullColoringFilter coloring = new PullColoringFilter(pd.getModelColor());
 
-        // TODO 2. perform backface culling in VIEW SPACE
-
-        // TODO 3. perform depth sorting in VIEW SPACE
-
-        // TODO 4. add coloring (space unimportant)
-
-        // lighting can be switched on/off
+        PullLightingFilter lighting = null;
         if (pd.isPerformLighting()) {
-            // 4a. TODO perform lighting in VIEW SPACE
-            
-            // 5. TODO perform projection transformation on VIEW SPACE coordinates
-        } else {
-            // 5. TODO perform projection transformation
+            lighting = new PullLightingFilter(pd.getLightPos());
         }
 
-        // TODO 6. perform perspective division to screen coordinates
+        PullProjectionFilter projection = new PullProjectionFilter(pd.getProjTransform());
+        PullScreenTransformFilter screenTransform = new PullScreenTransformFilter(pd.getViewportTransform());
+        PullRenderingSink renderer = new PullRenderingSink(pd.getGraphicsContext(), pd.getRenderingMode());
 
-        // TODO 7. feed into the sink (renderer)
+        mvTransform.setSource(modelSource);
+        backfaceCuller.setSource(mvTransform);
 
-        // returning an animation renderer which handles clearing of the
-        // viewport and computation of the praction
+        if (pd.isPerformLighting()) {
+            coloring.setSource(backfaceCuller);
+            lighting.setSource(coloring);
+            projection.setSource(lighting);
+        } else {
+            coloring.setSource(backfaceCuller);
+            projection.setSource(coloring);
+        }
+
+        screenTransform.setSource(projection);
+        renderer.setSource(screenTransform);
+
         return new AnimationRenderer(pd) {
-            // TODO rotation variable goes in here
+            private float rotation = 0.0f;
 
             /** This method is called for every frame from the JavaFX Animation
              * system (using an AnimationTimer, see AnimationRenderer). 
@@ -41,15 +49,19 @@ public class PullPipelineFactory {
              */
             @Override
             protected void render(float fraction, Model model) {
-                // TODO compute rotation in radians
+                rotation += fraction * 1.0f;
 
-                // TODO create new model rotation matrix using pd.getModelRotAxis and Matrices.rotate
+                Mat4 rotationMatrix = Matrices.rotate(rotation, pd.getModelRotAxis());
 
-                // TODO compute updated model-view tranformation
+                Mat4 modelMatrix = pd.getModelTranslation().multiply(rotationMatrix);
 
-                // TODO update model-view filter
+                Mat4 modelViewMatrix = pd.getViewportTransform().multiply(modelMatrix);
 
-                // TODO trigger rendering of the pipeline
+                mvTransform.setModelViewMatrix(modelViewMatrix);
+
+                modelSource.reset();
+
+                renderer.render();
             }
         };
     }
