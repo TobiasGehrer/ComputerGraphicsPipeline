@@ -1,38 +1,45 @@
 package at.fhv.sysarch.lab3.pipeline;
 
 import at.fhv.sysarch.lab3.animation.AnimationRenderer;
+import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.obj.Model;
+import at.fhv.sysarch.lab3.pipeline.push.*;
+import com.hackoeur.jglm.Mat4;
+import com.hackoeur.jglm.Matrices;
 import javafx.animation.AnimationTimer;
+
+import java.util.List;
 
 public class PushPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
-        // TODO: push from the source (model)
+        ModelViewTransformFilter mvTransform = new ModelViewTransformFilter();
+        BackfaceCullingFilter backfaceCuller = new BackfaceCullingFilter();
+        ColoringFilter coloring = new ColoringFilter(pd.getModelColor());
 
-        // TODO 1. perform model-view transformation from model to VIEW SPACE coordinates
-
-        // TODO 2. perform backface culling in VIEW SPACE
-
-        // TODO 3. perform depth sorting in VIEW SPACE
-
-        // TODO 4. add coloring (space unimportant)
-
-        // lighting can be switched on/off
+        LightingFilter lighting = null;
         if (pd.isPerformLighting()) {
-            // 4a. TODO perform lighting in VIEW SPACE
-            
-            // 5. TODO perform projection transformation on VIEW SPACE coordinates
-        } else {
-            // 5. TODO perform projection transformation
+            lighting = new LightingFilter(pd.getLightPos());
         }
 
-        // TODO 6. perform perspective division to screen coordinates
+        ProjectionFilter projection = new ProjectionFilter(pd.getProjTransform());
+        ScreenSpaceTransformFilter screenTransform = new ScreenSpaceTransformFilter(pd.getViewportTransform());
+        RenderingSink renderer = new RenderingSink(pd.getGraphicsContext(), pd.getRenderingMode());
 
-        // TODO 7. feed into the sink (renderer)
+        mvTransform.setTarget(backfaceCuller);
+        backfaceCuller.setTarget(coloring);
 
-        // returning an animation renderer which handles clearing of the
-        // viewport and computation of the praction
+        if (pd.isPerformLighting()) {
+            coloring.setTarget(lighting);
+            lighting.setTarget(projection);
+        } else {
+            coloring.setTarget(projection);
+        }
+
+        projection.setTarget(screenTransform);
+        screenTransform.setTarget(renderer);
+
         return new AnimationRenderer(pd) {
-            // TODO rotation variable goes in here
+            private float rotation = 0.0f;
 
             /** This method is called for every frame from the JavaFX Animation
              * system (using an AnimationTimer, see AnimationRenderer). 
@@ -42,16 +49,20 @@ public class PushPipelineFactory {
             @Override
             protected void render(float fraction, Model model) {
 
-                // TODO compute rotation in radians
+                rotation += fraction * 1.0f;
 
-                // TODO create new model rotation matrix using pd.modelRotAxis
+                Mat4 rotationMatrix = Matrices.rotate(rotation, pd.getModelRotAxis());
 
-                // TODO compute updated model-view tranformation
+                Mat4 modelMatrix = pd.getModelTranslation().multiply(rotationMatrix);
 
-                // TODO update model-view filter
+                Mat4 modelViewMatrix = pd.getViewTransform().multiply(modelMatrix);
 
-                // TODO trigger rendering of the pipeline
+                mvTransform.setModelViewMatrix(modelViewMatrix);
 
+                List<Face> faces = model.getFaces();
+                for (Face face : faces) {
+                    mvTransform.push(face);
+                }
             }
         };
     }
