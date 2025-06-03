@@ -55,7 +55,7 @@ public class PullPipelineFactory {
 
                 Mat4 modelMatrix = pd.getModelTranslation().multiply(rotationMatrix);
 
-                Mat4 modelViewMatrix = pd.getViewportTransform().multiply(modelMatrix);
+                Mat4 modelViewMatrix = pd.getViewTransform().multiply(modelMatrix);
 
                 mvTransform.setModelViewMatrix(modelViewMatrix);
 

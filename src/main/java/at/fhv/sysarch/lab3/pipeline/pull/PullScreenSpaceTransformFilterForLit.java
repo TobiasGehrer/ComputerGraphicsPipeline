@@ -29,7 +29,7 @@ public class PullScreenSpaceTransformFilterForLit extends AbstractPullFilter<Lit
         v2 = viewportMatrix.multiply(v2);
         v3 = viewportMatrix.multiply(v3);
 
-        return Optional.of(new ScreenFace(v1.toScreen(), v2.toScreen(), v3.toScreen(), input.getColor()));
+        return Optional.of(new ScreenFace(v1.toScreen(), v2.toScreen(), v3.toScreen(), input.getFinalColor()));
     }
 
     private Vec4 perspectiveDivide(Vec4 v) {

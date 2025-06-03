@@ -22,7 +22,7 @@ public class ModelSource implements PullPipe<Face> {
     @Override
     public Optional<Face> pull() {
         if (currentIndex < faces.size()) {
-            return Optional.of(faces.get(currentIndex));
+            return Optional.of(faces.get(currentIndex++));
         }
 
         return Optional.empty();
