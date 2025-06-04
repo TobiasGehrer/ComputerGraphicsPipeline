@@ -14,12 +14,14 @@ public class PullPipelineFactory {
         PullModelViewTransformFilter mvTransform = new PullModelViewTransformFilter();
         PullBackfaceCullingFilter backfaceCuller = new PullBackfaceCullingFilter();
         PullColoringFilter coloring = new PullColoringFilter(pd.getModelColor());
+        PullDepthSortingFilter depthSorter = new PullDepthSortingFilter();
 
         PullRenderingSink renderer = new PullRenderingSink(pd.getGraphicsContext(), pd.getRenderingMode());
 
         mvTransform.setSource(modelSource);
         backfaceCuller.setSource(mvTransform);
-        coloring.setSource(backfaceCuller);
+        depthSorter.setSource(backfaceCuller);
+        coloring.setSource(depthSorter);
 
         if (pd.isPerformLighting()) {
             PullLightingFilter lighting = new PullLightingFilter(pd.getLightPos());
@@ -58,6 +60,8 @@ public class PullPipelineFactory {
                 Mat4 modelViewMatrix = pd.getViewTransform().multiply(modelMatrix);
 
                 mvTransform.setModelViewMatrix(modelViewMatrix);
+
+                depthSorter.startNewFrame();
 
                 modelSource.reset();
 
