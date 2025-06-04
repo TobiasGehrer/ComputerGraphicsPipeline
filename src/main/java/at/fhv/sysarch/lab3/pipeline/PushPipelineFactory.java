@@ -55,7 +55,12 @@ public class PushPipelineFactory {
 
                 Mat4 rotationMatrix = Matrices.rotate(rotation, pd.getModelRotAxis());
 
-                Mat4 modelMatrix = pd.getModelTranslation().multiply(rotationMatrix);
+                // IMPORTANT: The order of matrix multiplication matters!
+                // We rotate the model first so it spins around its own axis.
+                // Then we move (translate) it to its position in the world.
+                // If we do it the other way (translate * rotate), the model will spin around the world origin,
+                // not around itself
+                Mat4 modelMatrix = rotationMatrix.multiply(pd.getModelTranslation());
 
                 Mat4 modelViewMatrix = pd.getViewTransform().multiply(modelMatrix);
 
@@ -63,8 +68,7 @@ public class PushPipelineFactory {
 
                 depthSorter.startNewFrame();
 
-                List<Face> faces = model.getFaces();
-                for (Face face : faces) {
+                for (Face face : model.getFaces()) {
                     mvTransform.push(face);
                 }
 
