@@ -1,13 +1,11 @@
 package at.fhv.sysarch.lab3.pipeline.pull;
 
-import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.data.ColoredFace;
-import at.fhv.sysarch.lab3.pipeline.data.LitFace;
 import at.fhv.sysarch.lab3.pipeline.data.ScreenFace;
 import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPullFilter;
+import at.fhv.sysarch.lab3.utils.ScreenSpaceUtil;
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec4;
-import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
@@ -20,18 +18,9 @@ public class PullScreenSpaceTransformFilterForColored extends AbstractPullFilter
 
     @Override
     protected Optional<ScreenFace> process(ColoredFace input) {
-        Face face = input.getFace();
-
-        Vec4 v1 = perspectiveDivide(face.getV1());
-        Vec4 v2 = perspectiveDivide(face.getV2());
-        Vec4 v3 = perspectiveDivide(face.getV3());
-
-        v1 = viewportMatrix.multiply(v1);
-        v2 = viewportMatrix.multiply(v2);
-        v3 = viewportMatrix.multiply(v3);
-
-        return Optional.of(new ScreenFace(v1.toScreen(), v2.toScreen(), v3.toScreen(), input.getColor()));
+        return Optional.of(ScreenSpaceUtil.toScreenFace(input.getFace(), input.getColor(), viewportMatrix));
     }
+
 
     private Vec4 perspectiveDivide(Vec4 v) {
         if (Math.abs(v.getW()) > 1e-6) {

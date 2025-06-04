@@ -3,6 +3,7 @@ package at.fhv.sysarch.lab3.pipeline.push;
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.data.ColoredFace;
 import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPushFilter;
+import at.fhv.sysarch.lab3.utils.ColoringUtil;
 import javafx.scene.paint.Color;
 
 public class ColoringFilter extends AbstractPushFilter<Face, ColoredFace> {
@@ -14,6 +15,6 @@ public class ColoringFilter extends AbstractPushFilter<Face, ColoredFace> {
 
     @Override
     protected ColoredFace process(Face input) {
-        return new ColoredFace(input, color);
+        return ColoringUtil.colorFace(input, color);
     }
 }

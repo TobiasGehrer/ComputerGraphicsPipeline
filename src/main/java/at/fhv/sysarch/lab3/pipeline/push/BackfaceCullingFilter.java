@@ -2,19 +2,11 @@ package at.fhv.sysarch.lab3.pipeline.push;
 
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPushFilter;
-import com.hackoeur.jglm.Vec4;
+import at.fhv.sysarch.lab3.utils.BackfaceCullingUtil;
 
 public class BackfaceCullingFilter extends AbstractPushFilter<Face, Face> {
     @Override
     protected Face process(Face input) {
-        Vec4 vertex = input.getV1();
-        Vec4 normal = input.getN1();
-
-        double dot = vertex.getX() * normal.getX() +
-                vertex.getY() * normal.getY() +
-                vertex.getZ() * normal.getZ();
-
-        // Culling: If surface points away from camera → skip
-        return dot > 0.0 ? null : input;
+        return BackfaceCullingUtil.isBackface(input) ? null : input;
     }
 }

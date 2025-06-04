@@ -5,9 +5,9 @@ import at.fhv.sysarch.lab3.pipeline.data.ColoredFace;
 import at.fhv.sysarch.lab3.pipeline.data.LitFace;
 import at.fhv.sysarch.lab3.pipeline.data.ScreenFace;
 import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPushFilter;
+import at.fhv.sysarch.lab3.utils.ScreenSpaceUtil;
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec4;
-import javafx.scene.paint.Color;
 
 public class ScreenSpaceTransformationFilter extends AbstractPushFilter<Object, ScreenFace> {
     private final Mat4 viewportMatrix;
@@ -18,31 +18,14 @@ public class ScreenSpaceTransformationFilter extends AbstractPushFilter<Object, 
 
     @Override
     protected ScreenFace process(Object input) {
-        Face face;
-        Color color;
-
-        if (input instanceof LitFace) {
-            LitFace litFace = (LitFace) input;
-            face = litFace.getFace();
-            color = litFace.getFinalColor();
-        } else if (input instanceof ColoredFace) {
-            ColoredFace coloredFace = (ColoredFace) input;
-            face = coloredFace.getFace();
-            color = coloredFace.getColor();
-        } else {
-            face = (Face) input;
-            color = Color.WHITE;
+        if (input instanceof LitFace lit) {
+            return ScreenSpaceUtil.toScreenFace(lit.getFace(), lit.getFinalColor(), viewportMatrix);
+        } else if (input instanceof ColoredFace colored) {
+            return ScreenSpaceUtil.toScreenFace(colored.getFace(), colored.getColor(), viewportMatrix);
+        } else if (input instanceof Face face) {
+            return ScreenSpaceUtil.toScreenFace(face, javafx.scene.paint.Color.WHITE, viewportMatrix);
         }
-
-        Vec4 v1 = perspectiveDivide(face.getV1());
-        Vec4 v2 = perspectiveDivide(face.getV2());
-        Vec4 v3 = perspectiveDivide(face.getV3());
-
-        v1 = viewportMatrix.multiply(v1);
-        v2 = viewportMatrix.multiply(v2);
-        v3 = viewportMatrix.multiply(v3);
-
-        return new ScreenFace(v1.toScreen(), v2.toScreen(), v3.toScreen(), color);
+        return null;
     }
 
     private Vec4 perspectiveDivide(Vec4 v) {
