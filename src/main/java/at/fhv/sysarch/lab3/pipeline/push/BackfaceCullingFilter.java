@@ -14,6 +14,7 @@ public class BackfaceCullingFilter extends AbstractPushFilter<Face, Face> {
                 vertex.getY() * normal.getY() +
                 vertex.getZ() * normal.getZ();
 
+        // Culling: If surface points away from camera → skip
         return dot > 0.0 ? null : input;
     }
 }

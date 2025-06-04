@@ -18,8 +18,8 @@ public class ProjectionTransformationFilter extends AbstractPushFilter<Object, O
     protected Object process(Object input) {
         Face face;
 
-        if (input instanceof LitFace) {
-            LitFace litFace = (LitFace) input;
+        // Handle LitFace
+        if (input instanceof LitFace litFace) {
             face = litFace.getFace();
 
             Vec4 v1 = projectionMatrix.multiply(face.getV1());
@@ -28,8 +28,10 @@ public class ProjectionTransformationFilter extends AbstractPushFilter<Object, O
 
             Face projectedFace = new Face(v1, v2, v3, face);
             return new LitFace(projectedFace, litFace.getColor(), litFace.getLightingFactor());
-        } else if (input instanceof ColoredFace) {
-            ColoredFace coloredFace = (ColoredFace) input;
+        }
+
+        // Handle ColoredFace
+        if (input instanceof ColoredFace coloredFace) {
             face = coloredFace.getFace();
 
             Vec4 v1 = projectionMatrix.multiply(face.getV1());
@@ -38,14 +40,18 @@ public class ProjectionTransformationFilter extends AbstractPushFilter<Object, O
 
             Face projectedFace = new Face(v1, v2, v3, face);
             return new ColoredFace(projectedFace, coloredFace.getColor());
-        } else {
-            face = (Face) input;
-
-            Vec4 v1 = projectionMatrix.multiply(face.getV1());
-            Vec4 v2 = projectionMatrix.multiply(face.getV2());
-            Vec4 v3 = projectionMatrix.multiply(face.getV3());
-
-            return new Face(v1, v2, v3, face);
         }
+
+        // Handle raw Face
+        if (input instanceof Face rawFace) {
+            Vec4 v1 = projectionMatrix.multiply(rawFace.getV1());
+            Vec4 v2 = projectionMatrix.multiply(rawFace.getV2());
+            Vec4 v3 = projectionMatrix.multiply(rawFace.getV3());
+
+            return new Face(v1, v2, v3, rawFace);
+        }
+
+        // Fallback if unknown type
+        return null;
     }
 }
