@@ -1,29 +1,24 @@
-# Kompilierte Java‐Klassen
+# Java-Klassen & Build-Output
 *.class
-
-# Üblicher Ordner für kompilierten Output (JavaFX/hand‐gestartetes Projekt)
-bin/
+build/
 out/
+bin/
 
-# IDE‐Konfigurationen
-.settings/
-.classpath
-.project
+# Gradle
+.gradle/
 
-# IntelliJ IDEA
+# IDE-Einstellungen (Eclipse/IntelliJ/VSCode)
 .idea/
 *.iml
-
-# VS Code
+.classpath
+.project
+.settings/
 .vscode/
 
 # Logs und temporäre Dateien
 *.log
 *.tmp
-*.temp
 
-# Mac OS
+# Betriebssystem-Spezifika
 .DS_Store
-
-# Windows Thumbnails
 Thumbs.db
