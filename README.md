@@ -56,9 +56,3 @@ This helps reduce code duplication across push and pull implementations.
 3. Run `Main.java`.
 
 You will see four viewports with different rendering configurations.
-
-## Author
-[Your Name / Student ID]
-
----
-Feel free to extend the pipeline with additional filters or post-processing steps!
