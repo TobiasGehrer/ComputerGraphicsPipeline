@@ -5,7 +5,7 @@ import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPushFilter;
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec4;
 
-public class ModelViewTransformFilter extends AbstractPushFilter<Face, Face> {
+public class ModelViewTransformationFilter extends AbstractPushFilter<Face, Face> {
     private Mat4 modelViewMatrix;
 
     public void setModelViewMatrix(Mat4 matrix) {

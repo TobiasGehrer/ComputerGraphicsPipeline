@@ -9,10 +9,10 @@ import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec4;
 import javafx.scene.paint.Color;
 
-public class ScreenSpaceTransformFilter extends AbstractPushFilter<Object, ScreenFace> {
+public class ScreenSpaceTransformationFilter extends AbstractPushFilter<Object, ScreenFace> {
     private final Mat4 viewportMatrix;
 
-    public ScreenSpaceTransformFilter(Mat4 viewportMatrix) {
+    public ScreenSpaceTransformationFilter(Mat4 viewportMatrix) {
         this.viewportMatrix = viewportMatrix;
     }
 

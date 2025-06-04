@@ -7,10 +7,10 @@ import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPushFilter;
 import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Vec4;
 
-public class ProjectionFilter extends AbstractPushFilter<Object, Object> {
+public class ProjectionTransformationFilter extends AbstractPushFilter<Object, Object> {
     private final Mat4 projectionMatrix;
 
-    public ProjectionFilter(Mat4 projectionMatrix) {
+    public ProjectionTransformationFilter(Mat4 projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
     }
 

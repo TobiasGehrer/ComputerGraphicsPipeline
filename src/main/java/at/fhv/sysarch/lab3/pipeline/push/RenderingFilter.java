@@ -5,11 +5,11 @@ import at.fhv.sysarch.lab3.pipeline.interfaces.PushPipe;
 import at.fhv.sysarch.lab3.rendering.RenderingMode;
 import javafx.scene.canvas.GraphicsContext;
 
-public class RenderingSink implements PushPipe<ScreenFace> {
+public class RenderingFilter implements PushPipe<ScreenFace> {
     private final GraphicsContext gc;
     private final RenderingMode mode;
 
-    public RenderingSink(GraphicsContext gc, RenderingMode mode) {
+    public RenderingFilter(GraphicsContext gc, RenderingMode mode) {
         this.gc = gc;
         this.mode = mode;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PushPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
-        ModelViewTransformFilter mvTransform = new ModelViewTransformFilter();
+        ModelViewTransformationFilter mvTransform = new ModelViewTransformationFilter();
         BackfaceCullingFilter backfaceCuller = new BackfaceCullingFilter();
         DepthSortingFilter depthSorter = new DepthSortingFilter();
         ColoringFilter coloring = new ColoringFilter(pd.getModelColor());
@@ -22,9 +22,9 @@ public class PushPipelineFactory {
             lighting = new LightingFilter(pd.getLightPos());
         }
 
-        ProjectionFilter projection = new ProjectionFilter(pd.getProjTransform());
-        ScreenSpaceTransformFilter screenTransform = new ScreenSpaceTransformFilter(pd.getViewportTransform());
-        RenderingSink renderer = new RenderingSink(pd.getGraphicsContext(), pd.getRenderingMode());
+        ProjectionTransformationFilter projection = new ProjectionTransformationFilter(pd.getProjTransform());
+        ScreenSpaceTransformationFilter screenTransform = new ScreenSpaceTransformationFilter(pd.getViewportTransform());
+        RenderingFilter renderer = new RenderingFilter(pd.getGraphicsContext(), pd.getRenderingMode());
 
         mvTransform.setTarget(backfaceCuller);
         backfaceCuller.setTarget(depthSorter);
