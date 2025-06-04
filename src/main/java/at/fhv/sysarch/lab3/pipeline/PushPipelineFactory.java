@@ -8,8 +8,6 @@ import com.hackoeur.jglm.Mat4;
 import com.hackoeur.jglm.Matrices;
 import javafx.animation.AnimationTimer;
 
-import java.util.List;
-
 public class PushPipelineFactory {
     public static AnimationTimer createPipeline(PipelineData pd) {
         ModelViewTransformationFilter mvTransform = new ModelViewTransformationFilter();

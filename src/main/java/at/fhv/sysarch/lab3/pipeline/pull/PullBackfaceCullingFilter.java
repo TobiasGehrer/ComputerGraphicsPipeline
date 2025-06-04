@@ -3,7 +3,6 @@ package at.fhv.sysarch.lab3.pipeline.pull;
 import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPullFilter;
 import at.fhv.sysarch.lab3.utils.BackfaceCullingUtil;
-import com.hackoeur.jglm.Vec4;
 
 import java.util.Optional;
 

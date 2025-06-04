@@ -4,7 +4,6 @@ import at.fhv.sysarch.lab3.obj.Face;
 import at.fhv.sysarch.lab3.pipeline.interfaces.AbstractPullFilter;
 import at.fhv.sysarch.lab3.utils.TransformUtil;
 import com.hackoeur.jglm.Mat4;
-import com.hackoeur.jglm.Vec4;
 
 import java.util.Optional;
 

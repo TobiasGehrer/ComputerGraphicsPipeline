@@ -8,12 +8,12 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.Optional;
 
-public class PullRenderingSink {
+public class PullRenderingFilter {
     private final GraphicsContext gc;
     private final RenderingMode mode;
     private PullPipe<ScreenFace> source;
 
-    public PullRenderingSink(GraphicsContext gc, RenderingMode mode) {
+    public PullRenderingFilter(GraphicsContext gc, RenderingMode mode) {
         this.gc = gc;
         this.mode = mode;
     }

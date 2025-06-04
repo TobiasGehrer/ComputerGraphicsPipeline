@@ -15,7 +15,7 @@ public class PullPipelineFactory {
         PullBackfaceCullingFilter backfaceCuller = new PullBackfaceCullingFilter();
         PullColoringFilter coloring = new PullColoringFilter(pd.getModelColor());
 
-        PullRenderingSink renderer = new PullRenderingSink(pd.getGraphicsContext(), pd.getRenderingMode());
+        PullRenderingFilter renderer = new PullRenderingFilter(pd.getGraphicsContext(), pd.getRenderingMode());
 
         mvTransform.setSource(modelSource);
         backfaceCuller.setSource(mvTransform);
